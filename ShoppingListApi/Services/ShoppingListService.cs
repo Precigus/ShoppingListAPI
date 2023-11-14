@@ -1,8 +1,10 @@
-﻿using ShoppingListApi.Models;
+﻿using System.Data;
+using System.Diagnostics;
+using ShoppingListApi.Models;
 
 namespace ShoppingListApi.Services;
 
-public class ShoppingListService
+public class ShoppingListService : IShoppingListService
 {
     private List<ShoppingList> _shoppingLists = new List<ShoppingList>();
 
@@ -11,7 +13,7 @@ public class ShoppingListService
         decimal totalTotalCost = 0;
         foreach (var shoppingList in _shoppingLists)
         {
-            totalTotalCost = shoppingList.CalculateTotalCost();
+            totalTotalCost += shoppingList.CalculateTotalCost();
         }
 
         return totalTotalCost;

@@ -3,11 +3,16 @@ using ShoppingListApi.Models;
 
 namespace ShoppingListApi.Services;
 
-public class ItemsGenerator
+public class ItemsGenerator : IItemsGenerator
 {
-    private static Random _random = new Random();
+    private readonly Random _random;
+
+    public ItemsGenerator()
+    {
+        _random = new Random();
+    }
     
-    public Item GenerateItem()
+    public Item Generate()
     {
         var bytes = new byte[100];
         _random.NextBytes(bytes);

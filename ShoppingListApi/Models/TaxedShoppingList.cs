@@ -2,20 +2,18 @@
 
 public class TaxedShoppingList : ShoppingList
 {
-    private readonly IList<ITaxPolicy> _taxPolicies;
-    
-    public TaxedShoppingList()
+    private readonly IEnumerable<ITaxPolicy> _taxPolicies;
+
+    public TaxedShoppingList(IEnumerable<ITaxPolicy> taxPolicies)
     {
-        _taxPolicies = new ITaxPolicy[]
-        {
-            new FixedPolicy(1.01m),
-            new ProgressivePolicy()
-        };
+        _taxPolicies = taxPolicies;
     }
     
     public override decimal CalculateTotalCost()
     {
         var cost = base.CalculateTotalCost();
+        if (_taxPolicies == null) return cost;
+        
         var actualCost = cost;
         
         foreach (var taxPolicy in _taxPolicies)

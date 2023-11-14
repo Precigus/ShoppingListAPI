@@ -9,8 +9,19 @@ namespace ShoppingListApi.Controllers;
 [Route("api/[controller]")]
 public class ShoppingListController : ControllerBase
 {
-    private static ShoppingListService _shoppingListService = new ShoppingListService();
-    private static ItemsGenerator _itemGenerator = new ItemsGenerator();
+    private readonly ITaxedShoppingListConverter _shoppingListConverter;
+    private readonly IShoppingListService _shoppingListService;
+    private readonly IItemsGenerator _itemsGenerator;
+
+    public ShoppingListController(
+        IShoppingListService shoppingListService,
+        IItemsGenerator itemsGenerator, 
+        ITaxedShoppingListConverter shoppingListConverter)
+    {
+        _shoppingListService = shoppingListService;
+        _itemsGenerator = itemsGenerator;
+        _shoppingListConverter = shoppingListConverter;
+    }
     
     [HttpPost("basic")]
     public IActionResult Create(ShoppingList shoppingList)
@@ -21,17 +32,18 @@ public class ShoppingListController : ControllerBase
     }
     
     [HttpPost("taxed")]
-    public IActionResult Create(TaxedShoppingList shoppingList)
+    public IActionResult CreateTaxed(ShoppingList shoppingList)
     {
-        _shoppingListService.Add(shoppingList);
+        var taxedShoppingList = _shoppingListConverter.ConvertToTaxed(shoppingList); 
+        _shoppingListService.Add(taxedShoppingList);
 
-        return Created("/shoppinglist/taxed", shoppingList);
+        return Created("/shoppinglist/taxed", taxedShoppingList);
     }
 
     [HttpGet("item/random")]
     public IActionResult GetRandomItem()
     {
-        var item = _itemGenerator.GenerateItem();
+        var item = _itemsGenerator.Generate();
 
         return Ok(item);
     }
