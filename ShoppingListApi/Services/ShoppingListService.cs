@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Diagnostics;
-using ShoppingListApi.Models;
+﻿using ShoppingListApi.Models;
 
 namespace ShoppingListApi.Services;
 
@@ -40,6 +38,20 @@ public class ShoppingListService : IShoppingListService
         }
 
         return null;
+    }
+
+    public IEnumerable<ShoppingList> GetByName(string name)
+    {
+        var shoppingLists = new List<ShoppingList>();
+        foreach (var list in _shoppingLists)
+        {
+            if (list.ShopName.ToLower() == name.ToLower())
+            {
+                shoppingLists.Add(list);
+            }
+        }
+
+        return shoppingLists;
     }
     
     public void Remove(int id)

@@ -1,9 +1,9 @@
 ﻿namespace ShoppingListApi.Models;
 
-public class FixedPolicy : ITaxPolicy
+public class FixedTaxPolicy : ITaxPolicy
 {
     private readonly decimal _taxes;
-    public FixedPolicy(decimal taxes)
+    public FixedTaxPolicy(decimal taxes)
     {
         _taxes = taxes;
     }

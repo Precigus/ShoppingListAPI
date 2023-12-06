@@ -76,6 +76,14 @@ public class ShoppingListController : ControllerBase
 
         return Ok(shoppingList);
     }
+    
+    [HttpGet("name/{name}")]
+    public IActionResult GetByName(string name)
+    {
+        var shoppingList = _shoppingListService.GetByName(name);
+
+        return Ok(shoppingList);
+    }
 
     [HttpPatch("{id:int}")]
     public IActionResult AddItem(int id, Item item)

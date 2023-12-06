@@ -8,7 +8,7 @@ public static class TaxPoliciesSetup
     public static void AddTaxPolicies(this IServiceCollection services)
     {
         services.AddSingleton<ITaxedShoppingListConverter, TaxedShoppingListConverter>();
-        services.AddSingleton<ITaxPolicy, ProgressivePolicy>();
-        services.AddSingleton<ITaxPolicy, FixedPolicy>(_ => new FixedPolicy(1.01m));
+        services.AddSingleton<ITaxPolicy, ProgressiveTaxPolicy>();
+        services.AddSingleton<ITaxPolicy, FixedTaxPolicy>(_ => new FixedTaxPolicy(1.01m));
     }
 }

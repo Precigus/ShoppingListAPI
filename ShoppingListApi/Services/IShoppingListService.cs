@@ -8,6 +8,7 @@ public interface IShoppingListService
     void Add(ShoppingList shoppingList);
     List<ShoppingList> GetAll();
     ShoppingList? GetById(int id);
+    IEnumerable<ShoppingList> GetByName(string name);
     void Remove(int id);
     void UpdateName(int id, string newName);
     void Update(int id, ShoppingList shoppingList);
