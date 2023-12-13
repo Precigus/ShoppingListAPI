@@ -6,7 +6,7 @@ public interface IShoppingListService
 {
     decimal CalculateTotalCost();
     void Add(ShoppingList shoppingList);
-    List<ShoppingList> GetAll();
+    IEnumerable<ShoppingList> GetAll();
     ShoppingList? GetById(int id);
     IEnumerable<ShoppingList> GetByName(string name);
     void Remove(int id);

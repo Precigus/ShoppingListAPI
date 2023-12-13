@@ -4,37 +4,30 @@ namespace ShoppingListApi.Services;
 
 public class ShoppingListService : IShoppingListService
 {
-    private List<ShoppingList> _shoppingLists = new List<ShoppingList>();
+    private Dictionary<int, ShoppingList> _shoppingLists = new Dictionary<int, ShoppingList>();
 
     public decimal CalculateTotalCost()
     {
-        decimal totalTotalCost = 0;
-        foreach (var shoppingList in _shoppingLists)
-        {
-            totalTotalCost += shoppingList.CalculateTotalCost();
-        }
-
-        return totalTotalCost;
+        return _shoppingLists.Values
+            .Select(sl => sl.CalculateTotalCost())
+            .Sum();
     }
 
     public void Add(ShoppingList shoppingList)
     {
-        _shoppingLists.Add(shoppingList);
+        _shoppingLists.Add(shoppingList.Id, shoppingList);
     }
     
-    public List<ShoppingList> GetAll()
+    public IEnumerable<ShoppingList> GetAll()
     {
-        return _shoppingLists;
+        return _shoppingLists.Values;
     }
     
     public ShoppingList? GetById(int id)
     {
-        foreach (var list in _shoppingLists)
+        if (_shoppingLists.TryGetValue(id, out var shoppingList))
         {
-            if (list.Id == id)
-            {
-                return list;
-            }
+            return shoppingList;
         }
 
         return null;
@@ -42,16 +35,9 @@ public class ShoppingListService : IShoppingListService
 
     public IEnumerable<ShoppingList> GetByName(string name)
     {
-        var shoppingLists = new List<ShoppingList>();
-        foreach (var list in _shoppingLists)
-        {
-            if (list.ShopName.ToLower() == name.ToLower())
-            {
-                shoppingLists.Add(list);
-            }
-        }
-
-        return shoppingLists;
+        return _shoppingLists.Values
+            .Where(sl =>
+                sl.ShopName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
     }
     
     public void Remove(int id)
@@ -59,7 +45,7 @@ public class ShoppingListService : IShoppingListService
         var shoppingList = GetById(id);
         if (shoppingList == null) throw new ArgumentException($"Shopping list with id {id} was not found");
         
-        _shoppingLists.Remove(shoppingList);
+        _shoppingLists.Remove(shoppingList.Id);
     }
 
     public void UpdateName(int id, string newName)
