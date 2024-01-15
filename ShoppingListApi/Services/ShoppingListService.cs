@@ -1,10 +1,18 @@
 ﻿using ShoppingListApi.Models;
+using ShoppingListApi.Repositories;
 
 namespace ShoppingListApi.Services;
 
 public class ShoppingListService : IShoppingListService
 {
     private Dictionary<int, ShoppingList> _shoppingLists = new Dictionary<int, ShoppingList>();
+
+    private readonly ShoppingListRepository _shoppngListrepository;
+
+    public ShoppingListService(ShoppingListRepository shoppngListrepository)
+    {
+        _shoppngListrepository = shoppngListrepository;
+    }
 
     public decimal CalculateTotalCost()
     {
@@ -33,11 +41,9 @@ public class ShoppingListService : IShoppingListService
         return null;
     }
 
-    public IEnumerable<ShoppingList> GetByName(string name)
+    public IEnumerable<ShoppingList?> GetByName(string name)
     {
-        return _shoppingLists.Values
-            .Where(sl =>
-                sl.ShopName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        return _shoppngListrepository.GetByName(name);
     }
     
     public void Remove(int id)
