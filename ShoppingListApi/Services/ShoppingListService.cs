@@ -5,81 +5,61 @@ namespace ShoppingListApi.Services;
 
 public class ShoppingListService : IShoppingListService
 {
-    private Dictionary<int, ShoppingList> _shoppingLists = new Dictionary<int, ShoppingList>();
 
-    private readonly ShoppingListRepository _shoppngListrepository;
+    private readonly IShoppingListRepository _shoppingListRepository;
+    private readonly IItemsRepository _itemsRepository;
 
-    public ShoppingListService(ShoppingListRepository shoppngListrepository)
+    public ShoppingListService(IShoppingListRepository shoppingListRepository, IItemsRepository itemsRepository)
     {
-        _shoppngListrepository = shoppngListrepository;
+        _shoppingListRepository = shoppingListRepository;
+        _itemsRepository = itemsRepository;
     }
 
     public decimal CalculateTotalCost()
     {
-        return _shoppingLists.Values
+        return _shoppingListRepository
+            .GetAll()
             .Select(sl => sl.CalculateTotalCost())
             .Sum();
     }
 
     public void Add(ShoppingList shoppingList)
     {
-        _shoppingLists.Add(shoppingList.Id, shoppingList);
+        _shoppingListRepository.Add(shoppingList);
     }
     
-    public IEnumerable<ShoppingList> GetAll()
+    public IEnumerable<ShoppingList?> GetAll()
     {
-        return _shoppingLists.Values;
+        return _shoppingListRepository.GetAll();
     }
     
     public ShoppingList? GetById(int id)
     {
-        if (_shoppingLists.TryGetValue(id, out var shoppingList))
-        {
-            return shoppingList;
-        }
-
-        return null;
+        return _shoppingListRepository.GetById(id);
     }
 
     public IEnumerable<ShoppingList?> GetByName(string name)
     {
-        return _shoppngListrepository.GetByName(name);
+        return _shoppingListRepository.GetByName(name);
     }
     
     public void Remove(int id)
     {
-        var shoppingList = GetById(id);
-        if (shoppingList == null) throw new ArgumentException($"Shopping list with id {id} was not found");
-        
-        _shoppingLists.Remove(shoppingList.Id);
+        _shoppingListRepository.Delete(id);
     }
 
     public void UpdateName(int id, string newName)
     {
-        if (newName == null) throw new ArgumentException("Please provide a name for for update");
-        
-        var oldShoppingList = GetById(id);
-
-        if (oldShoppingList == null) throw new ArgumentException($"Shopping list with id {id} was not found");
-        
-        oldShoppingList.ShopName = newName;
+        _shoppingListRepository.Update(id, newName);
     }
 
     public void Update(int id, ShoppingList update)
     {
-        var oldShoppingList = GetById(id);
-
-        if (oldShoppingList == null) throw new ArgumentException($"Shopping list with id {id} was not found");
-        
-        oldShoppingList.Update(update);
+        _shoppingListRepository.Update(id, update);
     }
 
     public void AddItem(int id, Item item)
     {
-        var shoppingList = GetById(id);
-        
-        if (shoppingList == null) throw new ArgumentException($"Shopping list with id {id} was not found");
-        
-        shoppingList.AddItem(item);
+        _itemsRepository.Create(id, item);
     }
 }

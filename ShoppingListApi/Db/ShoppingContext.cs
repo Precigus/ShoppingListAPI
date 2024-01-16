@@ -9,11 +9,20 @@ public class ShoppingContext : DbContext
     public DbSet<ShoppingList?> ShoppingLists { get; set; }
     public DbSet<Item> Items { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Item>()
+            .HasKey(i => i.Id);
+
+        modelBuilder.Entity<ShoppingList>()
+            .HasKey(sl => sl.Id);
+    }
+    
     public ShoppingContext() : base(UseSqlite())
     { }
 
-    public ShoppingContext(DbContextOptions<ShoppingContext> options) : base(options)
-    { }
+    // public ShoppingContext(DbContextOptions<ShoppingContext> options) : base(options)
+    // { }
 
     private static DbContextOptions<ShoppingContext> UseSqlite()
     {

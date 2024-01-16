@@ -1,6 +1,7 @@
 using ShoppingListApi.Bootstrap;
 using ShoppingListApi.Db;
 using ShoppingListApi.Models;
+using ShoppingListApi.Repositories;
 using ShoppingListApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,11 @@ builder.Services.AddControllers();
 // Transient - gets created for every time it is referenced
 // Scoped - gets created per request
 // Singleton - gets created once only
-builder.Services.AddSingleton<IShoppingListService, ShoppingListService>();
-builder.Services.AddSingleton<IItemsGenerator, ItemsGenerator>();
+builder.Services.AddTransient<IShoppingListService, ShoppingListService>();
+builder.Services.AddTransient<IItemsGenerator, ItemsGenerator>();
+builder.Services.AddTransient<IShoppingListRepository, ShoppingListRepository>();
+builder.Services.AddTransient<IItemsRepository, ItemsRepository>();
+
 builder.Services.AddTaxPolicies();
 
 builder.Services.AddDbContext<ShoppingContext>();
