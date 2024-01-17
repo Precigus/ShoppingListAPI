@@ -20,9 +20,9 @@ public class ShoppingContext : DbContext
     
     public ShoppingContext() : base(UseSqlite())
     { }
-
-    // public ShoppingContext(DbContextOptions<ShoppingContext> options) : base(options)
-    // { }
+ 
+    public ShoppingContext(DbContextOptions<ShoppingContext> options) : base(options)
+    { }
 
     private static DbContextOptions<ShoppingContext> UseSqlite()
     {

@@ -51,7 +51,11 @@ public class ShoppingListRepository : IShoppingListRepository
     {
         var dbShoppingList = _context.ShoppingLists.Find(id);
         if (dbShoppingList == null) return;
-        
+
+        if (shoppingList.ShopName != null) dbShoppingList.ShopName = shoppingList.ShopName;
+        if (shoppingList.Address != null) dbShoppingList.Address = shoppingList.Address;
+
+        _context.SaveChanges();
     }
 
     public void Update(int id, string newName)
@@ -64,7 +68,7 @@ public class ShoppingListRepository : IShoppingListRepository
 
     public void Delete(int id)
     {
-        var dbShoppingList = new Db.ShoppingList { Id = id };
+        var dbShoppingList = _context.ShoppingLists.Find(id);
         _context.Remove(dbShoppingList);
         _context.SaveChanges();
     }

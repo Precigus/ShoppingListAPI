@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using ShoppingListApi.Bootstrap;
 using ShoppingListApi.Db;
 using ShoppingListApi.Models;
@@ -19,7 +20,10 @@ builder.Services.AddTransient<IItemsRepository, ItemsRepository>();
 
 builder.Services.AddTaxPolicies();
 
-builder.Services.AddDbContext<ShoppingContext>();
+builder.Services.AddDbContext<ShoppingContext>(builder =>
+{
+    builder.UseSqlite(@"DataSource=ShoppingList.db");
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
